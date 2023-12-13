@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: frmg-radar
+resources:
+  - base/victoriametrics-service.yaml
+  - base/victoriametrics-pvc.yaml
+  - base/victoriametrics-statefulset.yaml
+  - base/lighthouse-pvc.yaml
+  - base/lighthouse-cronjob.yaml
+  - base/grafana-service.yaml
+  - base/grafana-deployment.yaml
+  - base/grafana-pvc.yaml
+  - base/grafana-ingress.yaml

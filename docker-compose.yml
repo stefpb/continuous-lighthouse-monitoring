@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  victoriametrics:
+    image: victoriametrics/victoria-metrics
+    container_name: victoriametrics
+    ports:
+      - "8428:8428"
+    volumes:
+      - victoriametrics_data:/victoria-metrics-data
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    depends_on:
+      - victoriametrics
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=7mAYknXTbZ96ww8Dc2X
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+volumes:
+  victoriametrics_data:
+  grafana_data:

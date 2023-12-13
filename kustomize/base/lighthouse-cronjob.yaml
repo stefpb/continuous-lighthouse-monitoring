@@ -1,0 +1,30 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: lighthouse-report
+spec:
+  schedule: "48 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: lighthouse
+            image: femtopixel/google-lighthouse
+            securityContext:
+              capabilities:
+                add: ["SYS_ADMIN"]
+            args:
+            - http://www.framago.de/
+            - --output
+            - json,html,csv
+            - --output-path
+            - /home/chrome/reports/report
+            volumeMounts:
+            - name: reports
+              mountPath: /home/chrome/reports
+          volumes:
+          - name: reports
+            persistentVolumeClaim:
+              claimName: lighthouse-reports-pvc
+          restartPolicy: OnFailure
