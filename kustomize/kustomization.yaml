@@ -11,3 +11,4 @@ resources:
   - base/grafana-deployment.yaml
   - base/grafana-pvc.yaml
   - base/grafana-ingress.yaml
+  - base/reporter-cronjob.yaml

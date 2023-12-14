@@ -1,8 +1,12 @@
-import fs from 'fs/promises';
+import fs from 'node:fs/promises';
+
+const lighthouseJsonFile = process.env.LIGHTHOUSE_JSON ?? './testreports/report.json';
+const hostname = process.env.DATABASE_URL ?? 'http://localhost:8428';
+const url = `${hostname}/api/v1/import/prometheus`;
 
 const processLighthouseData = async () => {
   try {
-    const content = await fs.readFile(process.env.LIGHTHOUSE_JSON, 'utf-8');
+    const content = await fs.readFile(lighthouseJsonFile, 'utf-8');
     const json = JSON.parse(content);
     const fetchTime = new Date(json.fetchTime).getTime();
     console.log('fetchTime:', fetchTime);
@@ -16,8 +20,6 @@ const processLighthouseData = async () => {
     console.log(data);
 
     // do a post request to push the data to prometheus
-    const hostname = process.env.DATABASE_URL ?? 'http://localhost:8428';
-    const url = `${hostname}/api/v1/import/prometheus`;
 
     const response = await fetch(url, {
       method: 'POST',

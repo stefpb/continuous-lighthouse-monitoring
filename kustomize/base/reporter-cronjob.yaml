@@ -1,0 +1,33 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: lighthouse-reporter
+spec:
+  schedule: "55 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: lighthouse-reporter
+            image: ghcr.io/stefpb/continuous-lighthouse-monitoring/lighthouse-reporter:latest
+            env:
+            - name: DATABASE_URL
+              value: "http://victoriametrics:8428"
+            - name: LIGHTHOUSE_JSON
+              value: "/home/chrome/reports/report.report.json"
+            resources:
+              limits:
+                cpu: "1"
+                memory: "512Mi"
+              requests:
+                cpu: "0.5"
+                memory: "256Mi"
+            volumeMounts:
+            - name: reports
+              mountPath: /home/chrome/reports
+          volumes:
+          - name: reports
+            persistentVolumeClaim:
+              claimName: lighthouse-reports-pvc
